@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Repozytoria Community
+cat > /etc/apk/repositories << EOF; $(echo)
+https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/main/
+https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/community/
+https://dl-cdn.alpinelinux.org/alpine/edge/testing/
+EOF
+
 # Aktualizacja systemu
 apk update
 apk upgrade
@@ -24,6 +31,9 @@ apk add mariadb mariadb-client
 rc-update add mariadb default
 service mariadb start
 
+# jeżeli istnieje mariadb.apk-new: ls /etc/init.d/ | grep mariadb
+# mv /etc/init.d/mariadb.apk-new /etc/init.d/mariadb
+
 # Konfiguracja bazy danych MySQL (ustawienie hasła root)
 mysql_secure_installation
 
@@ -31,4 +41,17 @@ mysql_secure_installation
 apk add phpmyadmin
 service nginx restart  # Restart serwera WWW
 
-echo "Skrypt zakończył działanie. Sprawdź konfigurację poszczególnych usług."
+# Sprawdzenie, czy pliki są wykonywalne
+chmod +x route.sh
+chmod +x status.sh
+
+read -p "Czy uruchomić skrypt route.sh? (T/n): " choice
+choice=${choice:-Tak}  # domyślna wartość na "Tak"
+
+if [ "$(echo "$choice" | tr '[:upper:]' '[:lower:]')" = "tak" ]; then
+    ./route.sh
+fi
+
+./status.sh
+
+echo "Skrypt install.sh zakończył działanie."

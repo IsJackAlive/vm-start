@@ -1,5 +1,7 @@
 #!/bin/sh
 
+apk add iptables
+
 # Otwarcie portu 80 dla serwera WWW (nginx)
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 
@@ -22,4 +24,8 @@ iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 iptables-save > /etc/iptables/rules.v4
 
 # Restart serwisu netfilter-persistent
-service netfilter-persistent restart
+if rc-service networking restart; then
+    echo "Zmiany w konfiguracji iptables zostały zapisane i serwis networking został ponownie uruchomiony."
+else
+    echo "Błąd podczas restartu serwisu networking. Sprawdź konfigurację iptables."
+fi
