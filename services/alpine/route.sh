@@ -18,7 +18,7 @@ iptables -A INPUT -p tcp --dport 3306 -j ACCEPT
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 
 # Otwarcie portu 8080 dla phpMyAdmin
-iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+# iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
 
 # Zapisanie zmian w konfiguracji iptables
 iptables-save > /etc/iptables/rules.v4

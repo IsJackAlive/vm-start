@@ -11,6 +11,11 @@ EOF
 apk update
 apk upgrade
 
+# Instalacja i uruchomienie ssh
+apk add openssh
+rc-update add sshd
+service sshd start
+
 # Instalacja i uruchomienie serwera WWW (nginx)
 apk add nginx
 rc-update add nginx default
@@ -33,13 +38,8 @@ service mariadb start
 
 # jeżeli istnieje mariadb.apk-new: ls /etc/init.d/ | grep mariadb
 # mv /etc/init.d/mariadb.apk-new /etc/init.d/mariadb
-
 # Konfiguracja bazy danych MySQL (ustawienie hasła root)
 mysql_secure_installation
-
-# Instalacja interfejsu webowego do zarządzania serwisami (phpMyAdmin)
-apk add phpmyadmin
-service nginx restart  # Restart serwera WWW
 
 # Sprawdzenie, czy pliki są wykonywalne
 chmod +x route.sh
